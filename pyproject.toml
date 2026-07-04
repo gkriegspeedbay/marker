@@ -17,17 +17,31 @@ include = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-Pillow = "^10.1.0"
+# Relaxed from "^10.1.0" (<11) per datalab-to/surya#519 (pillow<11 -> <13,
+# tested against 12.2.0) -- surya's own cap was the transitive blocker.
+Pillow = ">=10.1.0,<13"
 pydantic = "^2.4.2"
 pydantic-settings = "^2.0.3"
-transformers = "^4.45.2"
+# Relaxed from "^4.45.2" (<5) -- verified surya-ocr (patched fork below)
+# passes its full test suite under both transformers 4.57.6 and 5.13.0.
+# Capped at <6 since 6.x doesn't exist yet / hasn't been tested.
+transformers = ">=4.45.2,<6"
 python-dotenv = "^1.0.0"
 torch = "^2.7.0"
 tqdm = "^4.66.1"
 ftfy = "^6.1.1"
 rapidfuzz = "^3.8.1"
-surya-ocr = "^0.17.1"
-regex = "^2024.4.28"
+# Pinned to the transformers-5.x/Pillow-12.x-compat fork (branch
+# python314-compat-0.17.1) instead of PyPI's 0.17.1 -- see that repo's
+# commit for the full list of fixes (RoPE meta-device recompute, dataclass
+# config pad_token_id, missing post_init(), _tied_weights_keys format,
+# removed-symbol polyfills). Same 0.17.1 API surface; no marker code changes
+# needed. Interim measure pending upstream PRs #519/#520 merging.
+surya-ocr = {git = "https://github.com/gkriegspeedbay/surya.git", branch = "python314-compat-0.17.1"}
+# Relaxed from "^2024.4.28" (<2025) -- the old cap had no cp314 (Python
+# 3.14) wheel available in its range; open-ended to let the resolver pick
+# the latest compatible build.
+regex = ">=2024.4.28"
 pdftext = "~0.6.3"
 markdownify = "^1.1.0"
 click = "^8.2.0"
