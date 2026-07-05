@@ -6813,29 +6813,28 @@ description = "OCR, layout, reading order, and table recognition in 90+ language
 optional = false
 python-versions = ">=3.10,<3.15"
 groups = ["main"]
-files = []
-develop = false
+files = [
+    {file = "surya_ocr-0.17.1-py3-none-any.whl", hash = "sha256:10e6e4a2fe9fdcd6023aee52a017e63a1232abdd5db23a909482431bed1a8068"},
+]
 
 [package.dependencies]
-click = "^8.1.8"
-einops = "^0.8.1"
-filetype = "^1.2.0"
-opencv-python-headless = "==5.0.0.93"
+click = ">=8.1.8,<9.0.0"
+einops = ">=0.8.1,<0.9.0"
+filetype = ">=1.2.0,<2.0.0"
+opencv-python-headless = "5.0.0.93"
 pillow = ">=10.2.0,<13"
-platformdirs = "^4.3.6"
-pre-commit = "^4.2.0"
-pydantic = "^2.5.3"
-pydantic-settings = "^2.1.0"
-pypdfium2 = "=5.9.0"
-python-dotenv = "^1.0.0"
-torch = "^2.12.0"
+platformdirs = ">=4.3.6,<5.0.0"
+pre-commit = ">=4.2.0,<5.0.0"
+pydantic = ">=2.5.3,<3.0.0"
+pydantic-settings = ">=2.1.0,<3.0.0"
+pypdfium2 = "5.9.0"
+python-dotenv = ">=1.0.0,<2.0.0"
+torch = ">=2.12.0,<3.0.0"
 transformers = ">=4.56.1"
 
 [package.source]
-type = "git"
-url = "https://github.com/gkriegspeedbay/surya.git"
-reference = "1ee92814dd9b08abb0c093f0eab1476e5ad79d8a"
-resolved_reference = "1ee92814dd9b08abb0c093f0eab1476e5ad79d8a"
+type = "url"
+url = "https://github.com/gkriegspeedbay/surya/releases/download/v0.17.1-py314-compat.1/surya_ocr-0.17.1-py3-none-any.whl"
 
 [[package]]
 name = "sympy"
@@ -7966,4 +7965,4 @@ full = ["ebooklib", "mammoth", "openpyxl", "python-pptx", "weasyprint"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.15"
-content-hash = "16128af1593648e11bd264597473c8b8f8f35632e40b7b70a8f0232cdacb7967"
+content-hash = "00bbfbed543fa073dbaea851a27a83b23ce8520d4c46bef6c43e9dc7e955bf21"

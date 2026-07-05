@@ -51,19 +51,24 @@ torch = "^2.12.0"
 tqdm = "^4.66.1"
 ftfy = "^6.1.1"
 rapidfuzz = "^3.8.1"
-# Pinned to a COMMIT (not a branch -- flagged in security review: a branch
-# ref is mutable and could be force-pushed/amended without this lockfile
-# changing, unlike the hash-pinned PyPI release this replaces) on the
-# transformers-5.x/Pillow-12.x-compat fork -- see that repo's commit for
-# the full list of fixes (RoPE meta-device recompute + rope_init_fn
+# Switched from a git dependency (rev 1ee9281, on the transformers-5.x/
+# Pillow-12.x/torch-2.12.x-compat fork -- see that repo's commit history
+# for the full patch list: RoPE meta-device recompute + rope_init_fn
 # dispatch, dataclass config pad_token_id, missing post_init(),
-# _tied_weights_keys format, removed-symbol polyfills). Same 0.17.1 API
-# surface; no marker code changes needed. Interim measure pending upstream
-# PRs #519/#520 merging. Branch python314-compat-0.17.1 for reference/updates.
-# Re-pointed from c145d3e to 1ee9281 (surya's tip as of this commit) to pick
-# up the yanked-rapidfuzz lock fix and the torch ^2.12.0/python<3.15 bump --
-# keeps this pin in sync with the freshness pass just completed there.
-surya-ocr = {git = "https://github.com/gkriegspeedbay/surya.git", rev = "1ee92814dd9b08abb0c093f0eab1476e5ad79d8a"}
+# _tied_weights_keys format, removed-symbol polyfills) to a direct wheel
+# URL pointing at a GitHub Release built from that exact commit. Reason:
+# pdf2md (this fork's downstream consumer) installs via `pip/uv install
+# --require-hashes`, and pip fundamentally cannot generate a hash for a
+# `git+https://` dependency -- confirmed empirically (`uv pip compile
+# --generate-hashes` silently omits the hash for the git line; `--require-
+# hashes` then hard-refuses the install). A direct https:// wheel URL CAN
+# be hash-pinned (pip/uv hashes the actual downloaded file), so this swap
+# preserves the same "pinned to an exact, immutable build" security
+# property as the commit-SHA git pin did, while actually being installable
+# under pdf2md's hash-pinned install model. Same 0.17.1 API surface; no
+# marker code changes needed. Interim measure pending upstream PRs #519/
+# #520 merging -- revert to the PyPI release once they land.
+surya-ocr = {url = "https://github.com/gkriegspeedbay/surya/releases/download/v0.17.1-py314-compat.1/surya_ocr-0.17.1-py3-none-any.whl"}
 # Relaxed from "^2024.4.28" (<2025) -- the old cap had no cp314 (Python
 # 3.14) wheel available in its range; open-ended to let the resolver pick
 # the latest compatible build.
