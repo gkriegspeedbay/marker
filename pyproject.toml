@@ -84,7 +84,18 @@ mammoth = {version = "^1.9.0", optional = true}
 openpyxl = {version = "^3.1.5", optional = true}
 python-pptx = {version = "^1.0.2", optional = true}
 ebooklib = {version = "^0.18", optional = true}
-weasyprint = {version = "^63.1", optional = true}
+# Bumped from "^63.1" (same caret-freeze issue as the others in this pass).
+# Reviewed the full 63.1->69.0 changelog against marker's actual call sites
+# (marker/providers/{document,epub,html,powerpoint,spreadsheet}.py and
+# providers/__init__.py's get_font_css -- HTML(filename=/string=/base_url=),
+# HTML.write_pdf(path, stylesheets=[...]), CSS(string=..., font_config=...),
+# FontConfiguration()). Every breaking/deprecation change in this range
+# (69.0's --srgb->--output-intent, 68.0's default_url_fetcher deprecation,
+# 67.0's Python floor -> 3.10) touches CLI flags, URL-fetcher internals, or
+# an options-dict key marker never sets -- none of the 4 APIs marker calls
+# changed signature or semantics. 67.0's Python>=3.10 floor already matches
+# this file's own python = "^3.10".
+weasyprint = {version = "^69.0", optional = true}
 # Bumped from "^1.65.2" (same caret-freeze issue). openai 2.0.0's only
 # documented breaking change (per GitHub release notes) is scoped to the
 # Responses API's tool-call-output typing, not the Chat Completions surface
