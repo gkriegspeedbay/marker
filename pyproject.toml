@@ -16,7 +16,11 @@ include = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+# Tightened upper bound from "^3.10" (>=3.10,<4.0) to <3.15 -- same reason as
+# the surya fork: torch 2.12's own triton dependency declares python<3.15,
+# and this fork has never actually been tested past 3.14 (the whole point
+# of this compat pass) anyway, so <4.0 was never an honest claim.
+python = ">=3.10,<3.15"
 # Relaxed from "^10.1.0" (<11) per datalab-to/surya#519 (pillow<11 -> <13,
 # tested against 12.2.0) -- surya's own cap was the transitive blocker.
 Pillow = ">=10.1.0,<13"
@@ -27,7 +31,23 @@ pydantic-settings = "^2.0.3"
 # Capped at <6 since 6.x doesn't exist yet / hasn't been tested.
 transformers = ">=4.45.2,<6"
 python-dotenv = "^1.0.0"
-torch = "^2.7.0"
+# Bumped from "^2.7.0" (STANDARDS SS6.9.1, same caret-freeze pattern as the
+# AI-SDK deps above). Reviewed the full 2.7.1->2.12.1 changelog against
+# marker's actual torch usage (torch.cuda.is_available(), torch.backends.
+# mps.is_available(), torch.bfloat16/float32 dtype constants, torch.
+# set_num_threads(), torch.multiprocessing as a stdlib-multiprocessing shim
+# -- no torch.load/save, no autocast, no torch.nn, no tensor manipulation
+# anywhere in marker's own package code; device=/dtype= kwargs are only
+# forwarded into surya's predictors). No breaking change touches any of
+# those APIs. Two operational-only advisories, not code breaks: (1) 2.12's
+# default CUDA-13.0 wheel raises the driver floor -- on an old-driver host,
+# is_available() silently returns False and falls through to the existing
+# MPS/CPU fallback chain rather than erroring, same as today; worth a
+# driver check before deploying to unfamiliar GPU hardware. (2) MPS's
+# macOS floor moved 13->14 in 2.9 -- marker already treats MPS as a
+# secondary, partially-degraded path (pre-existing code comment: "MPS
+# device does not work for text detection, and will default to CPU").
+torch = "^2.12.0"
 tqdm = "^4.66.1"
 ftfy = "^6.1.1"
 rapidfuzz = "^3.8.1"
@@ -83,7 +103,16 @@ scikit-learn = "^1.6.1"
 mammoth = {version = "^1.9.0", optional = true}
 openpyxl = {version = "^3.1.5", optional = true}
 python-pptx = {version = "^1.0.2", optional = true}
-ebooklib = {version = "^0.18", optional = true}
+# Bumped from "^0.18" (same caret-freeze pattern). Diffed the actual source
+# (0.18 sdist vs 0.20 wheel) for every API marker/providers/epub.py calls
+# (read_epub, get_items, get_type, ITEM_IMAGE/ITEM_STYLE/ITEM_DOCUMENT,
+# get_content, file_name, media_type) -- behavior identical on marker's
+# code path. The one real semantic change (EpubHtml.get_content()'s error
+# branch returns bytes instead of str) is a strict improvement: it fixes a
+# latent AttributeError('str' object has no attribute 'decode') that 0.18
+# could raise on malformed epub content, since marker unconditionally calls
+# .get_content().decode('utf-8').
+ebooklib = {version = "^0.20", optional = true}
 # Bumped from "^63.1" (same caret-freeze issue as the others in this pass).
 # Reviewed the full 63.1->69.0 changelog against marker's actual call sites
 # (marker/providers/{document,epub,html,powerpoint,spreadsheet}.py and
@@ -94,7 +123,7 @@ ebooklib = {version = "^0.18", optional = true}
 # 67.0's Python floor -> 3.10) touches CLI flags, URL-fetcher internals, or
 # an options-dict key marker never sets -- none of the 4 APIs marker calls
 # changed signature or semantics. 67.0's Python>=3.10 floor already matches
-# this file's own python = "^3.10".
+# this file's own python floor of >=3.10.
 weasyprint = {version = "^69.0", optional = true}
 # Bumped from "^1.65.2" (same caret-freeze issue). openai 2.0.0's only
 # documented breaking change (per GitHub release notes) is scoped to the
@@ -122,7 +151,14 @@ streamlit = "^1.37.1"
 fastapi = "^0.139.0"
 uvicorn = "^0.50.0"
 python-multipart = "^0.0.32"
-pytest = "^8.3.3"
+# Bumped from "^8.3.3" (STANDARDS SS6.9.1: caret-frozen below 9.0.0). Reviewed
+# pytest 9.0's breaking changes (parametrize/async-test/bare-yield/non-None-
+# return semantics) against tests/conftest.py and the test suite -- none of
+# those patterns are used. Pre-existing hygiene gap noted but not new: the
+# "config"/"output_format" custom markers used throughout tests/ aren't
+# registered in pytest.ini (only "filename" is) -- warning-only since
+# strict_markers isn't set, unchanged behavior between 8.x and 9.x.
+pytest = "^9.1.1"
 pytest-mock = "^3.14.0"
 apted = "1.0.3"
 distance = "0.1.3"
