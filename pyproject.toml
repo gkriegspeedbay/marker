@@ -40,12 +40,22 @@ rapidfuzz = "^3.8.1"
 # _tied_weights_keys format, removed-symbol polyfills). Same 0.17.1 API
 # surface; no marker code changes needed. Interim measure pending upstream
 # PRs #519/#520 merging. Branch python314-compat-0.17.1 for reference/updates.
-surya-ocr = {git = "https://github.com/gkriegspeedbay/surya.git", rev = "88783c14cf15243426940b299956b0c4d0e49eed"}
+surya-ocr = {git = "https://github.com/gkriegspeedbay/surya.git", rev = "7259253098a02883d6dc1aaa262d76daa6249c83"}
 # Relaxed from "^2024.4.28" (<2025) -- the old cap had no cp314 (Python
 # 3.14) wheel available in its range; open-ended to let the resolver pick
 # the latest compatible build.
 regex = ">=2024.4.28"
-pdftext = "~0.6.3"
+# Bumped from "~0.6.3" (STANDARDS SS6.9.1 bump flow: reviewed all 18 commits
+# between v0.6.3 and v0.7.0 -- correctness fixes, perf optimizations
+# (explicitly "byte-identical output, golden-diff verified" per the
+# commits), and additive features (encrypted-PDF password support). No
+# breaking change to table_output/dictionary_output/Reference/flatten, the
+# APIs marker actually calls. Also REQUIRED: 0.7.0 is the release that
+# upgrades pdftext's own pypdfium2 pin to 5.9.0, matching surya's pin
+# above -- pdftext 0.6.3 hard-pins pypdfium2==4.30.0, which would otherwise
+# conflict with surya's bumped pin and make this whole dependency set
+# unresolvable.
+pdftext = "~0.7.0"
 markdownify = "^1.1.0"
 click = "^8.2.0"
 markdown2 = "^2.5.2"
