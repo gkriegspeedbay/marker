@@ -40,7 +40,7 @@ rapidfuzz = "^3.8.1"
 # _tied_weights_keys format, removed-symbol polyfills). Same 0.17.1 API
 # surface; no marker code changes needed. Interim measure pending upstream
 # PRs #519/#520 merging. Branch python314-compat-0.17.1 for reference/updates.
-surya-ocr = {git = "https://github.com/gkriegspeedbay/surya.git", rev = "7259253098a02883d6dc1aaa262d76daa6249c83"}
+surya-ocr = {git = "https://github.com/gkriegspeedbay/surya.git", rev = "c145d3e1c91bb483cdc9662a34d9b5042a641d10"}
 # Relaxed from "^2024.4.28" (<2025) -- the old cap had no cp314 (Python
 # 3.14) wheel available in its range; open-ended to let the resolver pick
 # the latest compatible build.
