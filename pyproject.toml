@@ -31,13 +31,16 @@ torch = "^2.7.0"
 tqdm = "^4.66.1"
 ftfy = "^6.1.1"
 rapidfuzz = "^3.8.1"
-# Pinned to the transformers-5.x/Pillow-12.x-compat fork (branch
-# python314-compat-0.17.1) instead of PyPI's 0.17.1 -- see that repo's
-# commit for the full list of fixes (RoPE meta-device recompute, dataclass
-# config pad_token_id, missing post_init(), _tied_weights_keys format,
-# removed-symbol polyfills). Same 0.17.1 API surface; no marker code changes
-# needed. Interim measure pending upstream PRs #519/#520 merging.
-surya-ocr = {git = "https://github.com/gkriegspeedbay/surya.git", branch = "python314-compat-0.17.1"}
+# Pinned to a COMMIT (not a branch -- flagged in security review: a branch
+# ref is mutable and could be force-pushed/amended without this lockfile
+# changing, unlike the hash-pinned PyPI release this replaces) on the
+# transformers-5.x/Pillow-12.x-compat fork -- see that repo's commit for
+# the full list of fixes (RoPE meta-device recompute + rope_init_fn
+# dispatch, dataclass config pad_token_id, missing post_init(),
+# _tied_weights_keys format, removed-symbol polyfills). Same 0.17.1 API
+# surface; no marker code changes needed. Interim measure pending upstream
+# PRs #519/#520 merging. Branch python314-compat-0.17.1 for reference/updates.
+surya-ocr = {git = "https://github.com/gkriegspeedbay/surya.git", rev = "88783c14cf15243426940b299956b0c4d0e49eed"}
 # Relaxed from "^2024.4.28" (<2025) -- the old cap had no cp314 (Python
 # 3.14) wheel available in its range; open-ended to let the resolver pick
 # the latest compatible build.
