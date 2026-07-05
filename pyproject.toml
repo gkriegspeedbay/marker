@@ -60,8 +60,22 @@ markdownify = "^1.1.0"
 click = "^8.2.0"
 markdown2 = "^2.5.2"
 filetype = "^1.2.0"
-google-genai = "^1.0.0"
-anthropic = "^0.46.0"
+# Bumped from "^1.0.0" (STANDARDS SS6.9.1: floor-only 0.x/pre-1.0 constraints
+# get pinned to a single minor by Poetry's caret semantics -- "^1.0.0" means
+# >=1.0.0,<2.0.0, silently freezing at whatever 1.x was current when this
+# was first written, forever, regardless of how often poetry lock reruns.
+# google-genai crossed to 2.0.0 on 2026-05-07; its own release notes scope
+# the breaking changes to the new Interactions API only ("GenerateContent
+# usage is unaffected"). marker/marker/services/gemini.py and vertex.py use
+# exactly the classic GenerateContent surface (genai.Client, .models.
+# generate_content, types.Part.from_bytes, types.ThinkingConfig) -- verified
+# unchanged in 2.10.0.
+google-genai = "^2.10.0"
+# Bumped from "^0.46.0" (same caret-freeze issue as above). No breaking API
+# change between 0.46.0 and 0.116.0 affects marker/marker/services/claude.py's
+# usage (anthropic.Anthropic(...), client.messages.create(...), RateLimitError/
+# APITimeoutError) -- verified unchanged in 0.116.0.
+anthropic = "^0.116.0"
 pre-commit = "^4.2.0"
 scikit-learn = "^1.6.1"
 
@@ -71,20 +85,41 @@ openpyxl = {version = "^3.1.5", optional = true}
 python-pptx = {version = "^1.0.2", optional = true}
 ebooklib = {version = "^0.18", optional = true}
 weasyprint = {version = "^63.1", optional = true}
-openai = "^1.65.2"
+# Bumped from "^1.65.2" (same caret-freeze issue). openai 2.0.0's only
+# documented breaking change (per GitHub release notes) is scoped to the
+# Responses API's tool-call-output typing, not the Chat Completions surface
+# marker/marker/services/openai.py actually uses (client.beta.chat.completions.
+# parse(...), response.choices[0].message.content) -- verified unchanged
+# (and still callable via the beta alias) in 2.44.0.
+openai = "^2.44.0"
 
 [tool.poetry.group.dev.dependencies]
 jupyter = "^1.0.0"
 datasets = "^2.21.0"
 streamlit = "^1.37.1"
-fastapi = "^0.115.4"
-uvicorn = "^0.32.0"
-python-multipart = "^0.0.16"
+# Bumped fastapi/starlette(transitive)/uvicorn/python-multipart together
+# (STANDARDS SS6.9.1) -- these back the real marker_server console-script
+# entry point (marker/scripts/server.py: FastAPI/Form/File/UploadFile,
+# starlette.responses.HTMLResponse, uvicorn), not just the streamlit demo,
+# even though they live in this dev group (a pre-existing upstream
+# packaging choice, not something this fork changed). fastapi was pinned
+# to "^0.115.4" (Poetry caret-freeze), which ALSO capped its own starlette
+# dependency at <0.47.0 -- starlette's real latest is 1.3.1. fastapi
+# 0.133.0 (PR #14987, "Add support for Starlette 1.0.0+") is the release
+# that lifts that ceiling entirely. Verified via a combined dry-run: all
+# four packages resolve simultaneously to true latest with zero conflicts.
+fastapi = "^0.139.0"
+uvicorn = "^0.50.0"
+python-multipart = "^0.0.32"
 pytest = "^8.3.3"
 pytest-mock = "^3.14.0"
 apted = "1.0.3"
 distance = "0.1.3"
-lxml = "5.3.0"
+# Bumped from the exact pin "5.3.0" (STANDARDS SS6.9.1) -- an undocumented,
+# unmaintained exact pin (sits next to other exact-pinned test-fixture
+# tooling like apted/distance, but nothing else in the graph caps lxml;
+# verified via a clean poetry lock with no other package forced to move).
+lxml = "6.1.1"
 tabulate = "^0.9.0"
 latex2mathml = "^3.77.0"
 playwright = "^1.49.1"
