@@ -23,7 +23,14 @@ include = [
 python = ">=3.10,<3.15"
 # Relaxed from "^10.1.0" (<11) per datalab-to/surya#519 (pillow<11 -> <13,
 # tested against 12.2.0) -- surya's own cap was the transitive blocker.
-Pillow = ">=10.1.0,<13"
+# Raised <13 -> <14 (py314-compat.2), in step with the surya fork, for the
+# nine Pillow advisories fixed only in 13.0.0. 13.0.0 release notes reviewed
+# against every PIL call site in marker/: none uses a removed or changed API.
+# poetry.lock is NOT regenerated in this commit: it cannot resolve the
+# compat.2 surya-ocr URL below until that release asset exists. Refresh it
+# with `poetry lock` once it is published (the wheel and sdist do not carry
+# the lock, so the released artifacts are unaffected).
+Pillow = ">=10.1.0,<14"
 pydantic = "^2.4.2"
 pydantic-settings = "^2.0.3"
 # Relaxed from "^4.45.2" (<5) -- verified surya-ocr (patched fork below)
@@ -68,7 +75,9 @@ rapidfuzz = "^3.8.1"
 # under pdf2md's hash-pinned install model. Same 0.17.1 API surface; no
 # marker code changes needed. Interim measure pending upstream PRs #519/
 # #520 merging -- revert to the PyPI release once they land.
-surya-ocr = {url = "https://github.com/gkriegspeedbay/surya/releases/download/v0.17.1-py314-compat.1/surya_ocr-0.17.1-py3-none-any.whl"}
+# py314-compat.2: repointed at the surya v0.17.1-py314-compat.2 asset
+# (Pillow <14).
+surya-ocr = {url = "https://github.com/gkriegspeedbay/surya/releases/download/v0.17.1-py314-compat.2/surya_ocr-0.17.1-py3-none-any.whl"}
 # Relaxed from "^2024.4.28" (<2025) -- the old cap had no cp314 (Python
 # 3.14) wheel available in its range; open-ended to let the resolver pick
 # the latest compatible build.
