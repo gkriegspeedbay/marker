@@ -6814,7 +6814,7 @@ optional = false
 python-versions = ">=3.10,<3.15"
 groups = ["main"]
 files = [
-    {file = "surya_ocr-0.17.1-py3-none-any.whl", hash = "sha256:10e6e4a2fe9fdcd6023aee52a017e63a1232abdd5db23a909482431bed1a8068"},
+    {file = "surya_ocr-0.17.1-py3-none-any.whl", hash = "sha256:eb36be23d7395684dda3a5afbed5ba8a8bf6d1ec0b6568d20fb1b84b6a2b4162"},
 ]
 
 [package.dependencies]
@@ -6822,7 +6822,7 @@ click = ">=8.1.8,<9.0.0"
 einops = ">=0.8.1,<0.9.0"
 filetype = ">=1.2.0,<2.0.0"
 opencv-python-headless = "5.0.0.93"
-pillow = ">=10.2.0,<13"
+pillow = ">=10.2.0,<14"
 platformdirs = ">=4.3.6,<5.0.0"
 pre-commit = ">=4.2.0,<5.0.0"
 pydantic = ">=2.5.3,<3.0.0"
@@ -6834,7 +6834,7 @@ transformers = ">=4.56.1"
 
 [package.source]
 type = "url"
-url = "https://github.com/gkriegspeedbay/surya/releases/download/v0.17.1-py314-compat.1/surya_ocr-0.17.1-py3-none-any.whl"
+url = "https://github.com/gkriegspeedbay/surya/releases/download/v0.17.1-py314-compat.2/surya_ocr-0.17.1-py3-none-any.whl"
 
 [[package]]
 name = "sympy"
@@ -7965,4 +7965,4 @@ full = ["ebooklib", "mammoth", "openpyxl", "python-pptx", "weasyprint"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.15"
-content-hash = "00bbfbed543fa073dbaea851a27a83b23ce8520d4c46bef6c43e9dc7e955bf21"
+content-hash = "cada21048e65804e55151afc2d9b66067b41fbe01d023cb13482297a614b9580"
